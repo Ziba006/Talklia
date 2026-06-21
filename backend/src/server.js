@@ -3,8 +3,7 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import dns from 'dns';
 import {ENV} from './lib/env.js';
-// import cors from "cors";
-// app.use(cors());
+import cors from "cors";
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -19,6 +18,10 @@ const __dirname = path.resolve();
 const PORT = ENV.PORT || 9000;
 
 app.use(express.json());
+app.use(cors({
+  origin: ENV.CLIENT_URL,
+  credentials: true
+}));
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
