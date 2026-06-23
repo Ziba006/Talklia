@@ -7,6 +7,7 @@ export const useAuthStore = create((set) => ({
   isCheckingAuth: true,
   isSigningUp: false,
   isLoggingIn: false,
+   onlineUsers: [],
 
   checkAuth: async () => {
     try {
@@ -54,6 +55,17 @@ logout: async () => {
   }catch(error){
     console.error("Error logging out:", error);
     toast.error("Error logging out.");
+  }
+},
+
+updateProfile: async (data) => {
+  try{
+    const res = await axiosInstance.put('/auth/update-profile', data);
+    set({ authUser: res.data });
+    toast.success("Profile picture updated!");
+  } catch(error){
+    console.error("Error updating profile picture:", error);
+    toast.error(  error.response?.data?.message || "Failed to update profile picture.");
   }
 }
 }));
