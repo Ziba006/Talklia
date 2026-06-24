@@ -10,9 +10,9 @@ dns.setServers(["1.1.1.1", "8.8.8.8"]);
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
+import {app, server} from './lib/socket.js';
 
 console.log("MONGO_URI:", ENV.MONGO_URI);
-const app = express();
 const __dirname = path.resolve();
 
 const PORT = ENV.PORT || 9000;
@@ -36,7 +36,7 @@ if (ENV.NODE_ENV === "production") {
   });
 }
 
-app.listen(9000, () => {
+server.listen(9000, () => {
     console.log("Server running on port " + PORT)
     connectDB()
 });
