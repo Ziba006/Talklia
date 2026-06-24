@@ -31,6 +31,7 @@ export const getMessagesByUserId = async (req, res) => {
         console.log("Error in getMessages controller:",error.message);
         res.status(500).json({message:"Internal server error"});
     }
+
 }
 
 export const sendMessage = async (req, res) => {
