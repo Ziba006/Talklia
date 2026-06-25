@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useChatStore } from '../store/useChatStore'
 import { useAuthStore } from '../store/useAuthStore';
-import { X } from "lucide-react";
+import {  ArrowLeft } from "lucide-react";
 
 function ChatHeader() {
     const {selectedUser, setSelectedUser} = useChatStore();
@@ -34,9 +34,12 @@ function ChatHeader() {
         </div>
      </div>
 
-     <button onClick={() => selectedUser(null)}>
-        <X className="w-5 h-5 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"/>
-     </button>
+        <button
+        onClick={() => setSelectedUser(null)}
+        className="md:hidden mr-2 p-2 rounded-full hover:bg-green-900 transition"
+      >
+        <ArrowLeft size={22} />
+      </button>
     </div>
   )
 }
