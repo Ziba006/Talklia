@@ -29,7 +29,7 @@ useEffect(()=>{
 },[messages]);
 
   return (
-    <>
+    
     <div className="flex flex-col h-full">
     <ChatHeader/>
     <div className="flex-1 px-3 md:px-6 py-4 md:py-8 overflow-y-auto">
@@ -67,7 +67,7 @@ useEffect(()=>{
 
     <MessageInput/>
     </div>
-    </>
+
  
   )
 }
