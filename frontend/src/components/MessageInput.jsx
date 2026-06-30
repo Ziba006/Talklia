@@ -11,17 +11,29 @@ function MessageInput() {
 
   const fileInputRef = useRef(null);
 
-  const { sendMessage, isSoundEnabled } = useChatStore();
+const {
+  sendMessage,
+  sendGroupMessage,
+  selectedGroup,
+  isSoundEnabled,
+} = useChatStore();
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
     if (isSoundEnabled) playRandomKeyStrokeSound();
 
-    sendMessage({
-      text: text.trim(),
-      image: imagePreview,
-    });
+ const messageData = {
+  text: text.trim(),
+  image: imagePreview,
+};
+
+if (selectedGroup) {
+  sendGroupMessage(messageData);
+} else {
+  sendMessage(messageData);
+}
+
     setText("");
     setImagePreview("");
     if (fileInputRef.current) fileInputRef.current.value = "";

@@ -5,15 +5,24 @@ import NoChatsFound from "./NoChatsFound";
 import { useAuthStore } from "../store/useAuthStore";
 
 function ChatsList() {
-  const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } = useChatStore();
+  const {
+  getMyChatPartners,
+  getGroups,
+  chats,
+  groups,
+  isUsersLoading,
+  setSelectedUser,
+  setSelectedGroup,
+} = useChatStore();
   const { onlineUsers } = useAuthStore();
 
-  useEffect(() => {
-    getMyChatPartners();
-  }, [getMyChatPartners]);
+useEffect(() => {
+  getMyChatPartners();
+  getGroups();
+}, [getMyChatPartners, getGroups]);
 
   if (isUsersLoading) return <UsersLoadingSkeleton />;
-  if (chats.length === 0) return <NoChatsFound />;
+  if (chats.length === 0 && groups.length === 0) return <NoChatsFound />;
 
   return (
     <>
@@ -21,7 +30,10 @@ function ChatsList() {
         <div
           key={chat._id}
           className="bg-cyan-500/10 p-4 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors"
-          onClick={() => setSelectedUser(chat)}
+         onClick={() => {
+  setSelectedUser(chat);
+  setSelectedGroup(null);
+}}
         >
           <div className="flex items-center gap-3">
             <div className={`avatar ${onlineUsers.includes(chat._id) ? "online" : "offline"}`}>
@@ -33,6 +45,31 @@ function ChatsList() {
           </div>
         </div>
       ))}
+
+      {groups.map((group) => (
+  <div
+    key={group._id}
+    className="bg-cyan-500/10 p-4 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors"
+   onClick={() => {
+  setSelectedUser(null);
+  setSelectedGroup(group);
+}}
+  >
+    <div className="flex items-center gap-3">
+   <div className="size-12 rounded-full overflow-hidden">
+  <img
+    src={group.image || "/groupavatar.jpg"}
+    alt={group.name}
+    className="w-full h-full object-cover"
+  />
+</div>
+
+      <h4 className="text-slate-200 font-medium truncate">
+        {group.name}
+      </h4>
+    </div>
+  </div>
+))}
     </>
   );
 }

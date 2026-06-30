@@ -40,6 +40,18 @@ io.on("connection", (socket) => {
         delete userSocketMap[userId];
          io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
+
+            // Join a group room
+        socket.on("joinGroup", (groupId) => {
+        socket.join(groupId);
+        console.log(`${socket.user.fullName} joined group ${groupId}`);
+        });
+
+        // Leave a group room
+        socket.on("leaveGroup", (groupId) => {
+        socket.leave(groupId);
+        console.log(`${socket.user.fullName} left group ${groupId}`);
+        });
 });
 
 export {io, app, server};

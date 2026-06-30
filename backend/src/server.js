@@ -11,6 +11,8 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 import {app, server} from './lib/socket.js';
+import groupRoutes from "./routes/group.route.js";
+import groupMessageRoutes from "./routes/groupMessage.route.js"
 
 console.log("MONGO_URI:", ENV.MONGO_URI);
 const __dirname = path.resolve();
@@ -26,6 +28,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/groups", groupRoutes);
+app.use("/api/group-messages", groupMessageRoutes);
 
 // //  make ready for deployment
 if (ENV.NODE_ENV === "production") {
