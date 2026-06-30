@@ -15,6 +15,8 @@ export const useChatStore = create((set, get) => ({
   isCreateGroupModalOpen: false,
   isUsersLoading: false,
   isMessagesLoading: false,
+  isGroupInfoModalOpen: false,
+  isAddMembersModalOpen: false,
   isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
 
   toggleSound: () => {
@@ -29,6 +31,12 @@ export const useChatStore = create((set, get) => ({
 
   setCreateGroupModalOpen: (value) =>
   set({ isCreateGroupModalOpen: value }),
+
+  setGroupInfoModalOpen: (value) =>
+  set({ isGroupInfoModalOpen: value }),
+
+  setAddMembersModalOpen: (value) =>
+  set({ isAddMembersModalOpen: value }),
 
   getAllContacts: async () => {
     set({ isUsersLoading: true });
@@ -221,4 +229,46 @@ export const useChatStore = create((set, get) => ({
     socket.off("newGroupMessage");
   },
 
+  addMembersToGroup: async (groupId, members) => {
+  try {
+    const res = await axiosInstance.patch(
+      `/groups/${groupId}/add-members`,
+      { members }
+    );
+
+    // Update selected group immediately
+    set({ selectedGroup: res.data });
+
+    // Refresh group list
+    await get().getGroups();
+
+    toast.success("Members added successfully!");
+
+    return res.data;
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to add members"
+    );
+  }
+},
+
+leaveGroup: async (groupId) => {
+  try {
+    await axiosInstance.patch(`/groups/${groupId}/leave`);
+
+    await get().getGroups();
+
+    set({
+      selectedGroup: null,
+      messages: [],
+    });
+
+    toast.success("You left the group");
+
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to leave group"
+    );
+  }
+},
 }));

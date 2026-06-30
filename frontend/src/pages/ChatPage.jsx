@@ -10,6 +10,8 @@ import ContactList from '../components/ContactList.jsx';
 import ChatContainer from '../components/ChatContainer.jsx';
 import NoConversationPlaceholder from '../components/NoConversationPlaceholder.jsx';
 import CreateGroupModal from "../components/CreateGroupModal.jsx";
+import GroupInfoModal from "../components/GroupInfoModal";
+import AddMembersModal from "../components/AddMembersModal";
 import { UsersRound } from "lucide-react";
 
 function ChatPage() {
@@ -84,6 +86,7 @@ useEffect(() => {
 </BorderAnimatedContainer>
 
 <CreateGroupModal />
+<GroupInfoModal />
    </div>
   )
 }

@@ -1,5 +1,6 @@
 import Group from "../models/Group.js";
 import cloudinary from "../lib/cloudinary.js";
+import User from "../models/User.js";
 
 // Create a new group
 export const createGroup = async (req, res) => {
@@ -49,5 +50,80 @@ export const getMyGroups = async (req, res) => {
   } catch (error) {
     console.error("Get Groups Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const addMembersToGroup = async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const { members } = req.body;
+
+    if (!members || members.length === 0) {
+      return res.status(400).json({
+        message: "No members selected",
+      });
+    }
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return res.status(404).json({
+        message: "Group not found",
+      });
+    }
+
+    // Remove duplicates
+    const existingMembers = group.members.map((id) => id.toString());
+
+    const newMembers = members.filter(
+      (id) => !existingMembers.includes(id)
+    );
+
+    group.members.push(...newMembers);
+
+    await group.save();
+
+    const updatedGroup = await Group.findById(groupId)
+      .populate("members", "fullName profilePic")
+      .populate("admin", "fullName profilePic");
+
+    res.status(200).json(updatedGroup);
+
+  } catch (error) {
+    console.error("Add Members Error:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const leaveGroup = async (req, res) => {
+  try {
+    const { groupId } = req.params;
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return res.status(404).json({
+        message: "Group not found",
+      });
+    }
+
+    group.members = group.members.filter(
+      (member) => member.toString() !== req.user._id.toString()
+    );
+
+    await group.save();
+
+    res.status(200).json({
+      message: "You left the group",
+    });
+
+  } catch (error) {
+    console.error("Leave Group Error:", error);
+
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
   }
 };
