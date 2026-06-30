@@ -87,6 +87,7 @@ useEffect(() => {
 
 <CreateGroupModal />
 <GroupInfoModal />
+<AddMembersModal />
    </div>
   )
 }
